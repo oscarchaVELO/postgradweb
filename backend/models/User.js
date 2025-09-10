@@ -5,8 +5,9 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   bio: String,
   location: {
-    type: { type: String, enum: ['Point'], default: 'Point' },
-    coordinates: { type: [Number], required: true }, // [longitude, latitude]
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    country: { type: String, required: true }
   },
   interests: [String],
   swipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

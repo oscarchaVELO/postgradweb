@@ -17,10 +17,10 @@ router.post('/', async (req, res) => {
 // Update user location
 router.put('/:id/location', async (req, res) => {
   try {
-    const { coordinates } = req.body; // [longitude, latitude]
+    const { city, state, country } = req.body;
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { location: { type: 'Point', coordinates } },
+      { location: { city, state, country } },
       { new: true }
     );
     res.json(user);
@@ -29,17 +29,14 @@ router.put('/:id/location', async (req, res) => {
   }
 });
 
-// Get users nearby
+// Get users nearby (by city, state, country)
 router.get('/nearby', async (req, res) => {
   try {
-    const { lng, lat, maxDistance = 5000 } = req.query;
+    const { city, state, country } = req.query;
     const users = await User.find({
-      location: {
-        $near: {
-          $geometry: { type: 'Point', coordinates: [parseFloat(lng), parseFloat(lat)] },
-          $maxDistance: parseInt(maxDistance)
-        }
-      }
+      'location.city': city,
+      'location.state': state,
+      'location.country': country
     });
     res.json(users);
   } catch (err) {
